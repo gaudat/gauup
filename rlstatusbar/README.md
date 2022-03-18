@@ -50,34 +50,15 @@ My laptop never made an image appear on the screen. However it is recognized as 
 
 Turns out most HDMI devices, including my laptop and Raspberry Pi, does not support display with such low X resolution. Maybe the lower limit is 200 or 240 pixels. Anyway 132 pixels high never produced a image on the display.
 
-I end up using **1920x264** (which works) and set up 1x2 scaling on Raspberry Pi. So the "canvas" is still at 1920x132. I needed to replace `dtoverlay=vc4-kms-v3d` in config.txt of the boot partition with "vc4-**f**kms-v3d to enable KMS scaling. Using the ordinary overlay does not produce any image no matter how I fiddled with the flags.
+I end up using **1920x264** (which works) and set up 1x2 scaling on Raspberry Pi. So the "canvas" is still at 1920x132. I needed to replace `dtoverlay=vc4-kms-v3d` in config.txt of the boot partition with "vc4-**f**kms-v3d to enable KMS scaling. If you are using the wrong KMS you will not be able to use "xrandr". Using the ordinary overlay does not produce any image no matter how I fiddled with the flags.
 
 I suspect the problem is at the scaler input instead of my output devices. The scaler board has a VGA input but I'm not diving into it. Maybe hook up an oscilloscope to the HDMI and see the signal is alright.
 
 Anyway it produced a crisp image with the right aspect ratio this way.
 
-### Software
+![Raspberry Pi Desktop on a 1920x132 display](DSC_1218.jpg)
 
-First I tried pushing characters on the **Linux text console**. I cooked up a script that showed a colored wave on the screen. It end up rendering laggy with less than 10 FPS.
+![The display is so short that the window menu overflows](DSC_1219.jpg)
 
-Then I tried writing to the framebuffer **/dev/fb0** directly. Some noise appeared in the output. 
-
-I installed X server and set the Pi to auto run a full-screen graphics terminal **lxterminal** on startup. Result: same laggy display as the text console.
-
-I ended up installing **Chromium** and making HTML pages. It is flawless at 60 FPS. I also verified WebGL performance with a "Lightning" demo found online. DOM manipulation is slow with Raspberry Pi though; the DOM-animated star backgrounds in "Nyan Cat" is laggy.
-
-### Themes
-#### Already done:
-* Terminal (Text demo + Clock)
-* Lightning (WebGL demo)
-* Nyan Cat (Web demo)
-
-#### Working on right now:
-* Better looking clock
-
-#### Backlog:
-* GeoIP of my opponents when playing Mario Kart
-* Stock ticker
-* News roll
-* Song title / Lyrics (Through Shazam or Bluetooth)
-* You name it
+#### Software
+Go check out the [main repository](https://github.com/gaudat/rlstatusbar).
