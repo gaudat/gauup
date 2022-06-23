@@ -1,3 +1,30 @@
+### Controlling the motor through HTTP
+
+Endpoint: `http://{ip}/?value={value}`
+
+#### Drill motor
+
+Set value to 4915 to stop the motor.\
+Set value between 4916 and 6553 to spin the motor.\
+Larger value makes the motor quicker.
+
+Set value between 3277 and 4914 to spin the motor in reverse.\
+Smaller value makes the motor reverse quicker.
+
+The motor stops after 2 seconds if no commands are received.
+
+#### Servo motor
+
+Set value between 2457 and 8000 to rotate the servo motor.\
+4915 corresponds to the midpoint.\
+Test with small increments to prevent the motor from stalling.
+
+The servo motor will stop giving torque after 2 seconds when no commands are received.
+
+2500 corresponds to the door opened at 90 degrees. \
+6400 corresponds to the door shut. \
+4915 corresponds to the middle point at 45 degrees open.
+
 ### Setting up WiFi SSID and password
 
 1. Ensure the lithium ion battery is disconnected.
