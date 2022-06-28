@@ -6,6 +6,7 @@
 static const uint16_t server_port = 80;
 static const char default_wifi_name[] = "TOP TEXT";
 static const char default_wifi_pass[] = "BOTTOM TEXT";
+static const int default_servo_pos = 4915;
 
 // Global state
 char wifi_name[128];
@@ -257,8 +258,8 @@ void setup() {
 
 
   ledcSetup(1, 50, 16); // channel 1, 50 Hz, 16-bit width
-  ledcAttachPin(2, 1);   // GPIO 15 assigned to channel 1
-  ledcWrite(1, servo_pos); // Moved the servo to 90 degree
+  ledcAttachPin(2, 1);
+  ledcWrite(1, default_servo_pos); // Moved the servo to 90 degree
 
   Serial.print("\r\nCalibrating motor controller ... ");
   delay(5000);
@@ -274,7 +275,10 @@ void loop()
   if ((millis() - last_web_command) > web_timeout) {
     // This check runs when no client is connected
     // Switch off the motor
-    ledcWrite(1, 4915);
+    if (ledcRead(1) != default_servo_pos) {
+      Serial.println("Disconnected timeout");
+      ledcWrite(1, default_servo_pos);
+    }
   }
   WiFiClient client = server.available();   //Checking if any client request is available or not
   if (client)
@@ -286,7 +290,10 @@ void loop()
       if ((millis() - last_web_command) > web_timeout) {
         // This check runs when a client is connected
         // Switch off the motor
-        ledcWrite(1, 4915);
+        if (ledcRead(1) != default_servo_pos) {
+          Serial.println("Connected timeout");
+          ledcWrite(1, default_servo_pos);
+        }
       }
       if (client.available()) {           // if there is some client data available
         char c = client.read();
@@ -340,7 +347,7 @@ void loop()
               client.println("Content-Type: text/plain");
               client.println();
               if (count < 1) {
-                client.println("<value> is not supplied.");
+                client.println("<value> cannot be parsed.");
               } else {
                 client.println("Supplied <value> is out of range.");
               }
