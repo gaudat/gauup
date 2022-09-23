@@ -1,0 +1,87 @@
+Hub75
+Pin1
+N | VCC
+N | VCC
+N | 3/4E
+? | 4B2
+4G2 | 4R2
+? | 4B1
+4G1 | 4R1
+? | 3B2
+3G2 | 3R2
+? | 3B1
+3G1 | 3R1
+? | 2B2
+2G2 | 2R2
+? | 2B1
+2G1 | 2R1
+? | 1B2
+1G2 | 1R2
+? | 1B1
+1G1 | 1R1
+D | C
+B | A
+S | CK
+OE | N
+VCC | N
+VCC | N
+
+
+L
+DIR (VCC)
+A0..A7
+GND
+
+R
+VCC
+~OE (GND)
+B0..B7
+
+C5
+4B2
+4G2
+4R2
+4B1
+4G1
+4R1
+3B2
+3G2
+
+3R2
+3B1
+3G1
+3R1
+34E
+34D
+34C
+34B
+
+34OE
+34CK
+34A
+34S
+2B2
+2R2
+2G2
+2B1
+
+2R1
+2G1
+1B2
+1G2
+1R2
+1B1
+1G1
+1R1
+
+12E
+12D
+12C
+12B
+12A
+12S
+12CK
+12OE
+C1
+
+Bank 13: 2-15 14
