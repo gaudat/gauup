@@ -9,9 +9,9 @@ import socket
 
 tranid = uuid.uuid4()
 
-listen_port = 5152
+listen_port = int(sys.argv[1])
 
-worker_count = 32
+worker_count = int(sys.argv[2])
 
 socket_min_lifetime = 60
 socket_min_speed = 2000000
@@ -96,6 +96,8 @@ class Des:
                                     work_i = None
                                 if reborn:
                                     log(f"Tear down socket")
+                                    writer.close()
+                                    await writer.wait_closed()
                                     self.conn_count -= 1
                                     return
                 if self.finished.is_set():
@@ -105,6 +107,8 @@ class Des:
                         await self.send_finish(reader, writer)
                     except Exception:
                         pass
+                    writer.close()
+                    await writer.wait_closed()
                     self.conn_count -= 1
                     return
                 # No work available

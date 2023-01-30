@@ -4,9 +4,9 @@ import random
 import socket
 import ssl
 
-worker_count = 5
-server_host = "localhost"
-server_port = 5152
+worker_count = int(sys.argv[3])
+server_host = sys.argv[1]
+server_port = int(sys.argv[2])
 
 def log(*args):
     return print(*args, file=sys.stderr)
@@ -58,7 +58,9 @@ class Ser:
                     reader, writer = await get_socket()
                 except Exception:
                     continue
+            log("Got socket")
             await self.go(reader, writer)
+            log("Clean up socket")
             # Clean up socket
             reader = writer = None
         log("Finishing worker")
