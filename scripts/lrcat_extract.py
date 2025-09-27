@@ -3,29 +3,13 @@ import os
 import sys
 
 db = sqlite3.connect(sys.argv[1])
+coll = sys.argv[2]
 
-pic_count = db.execute('select count(1) from Adobe_images;').fetchone()[0]
-print("Image count: {}".format(pic_count))
+coll_id = db.execute('select id_local from AgLibraryCollection where name = (?)', (coll,)).fetchone()
+assert coll_id is not None
 
-colors = db.execute('select distinct colorLabels from Adobe_images;').fetchall()
-colors = [c[0] for c in colors]
-print("Colors: {}".format(colors))
-
-if len(sys.argv) >= 3:
-    selected_color = sys.argv[2].lower()
-else:
-    exit(0)
-
-# Match prefix
-match_colors = [c for c in colors if c.lower().startswith(selected_color.lower())]
-if len(match_colors) > 1:
-    print("Error - input match more than one color ({})".format(match_colors))
-    exit(-1)
-if len(match_colors) == 0:
-    print("Error - input does not match any color")
-    exit(-1)
-
-match_images = db.execute("select folder, baseName || '.' || extension from AgLibraryFile where id_local in (select rootFile from Adobe_images where colorLabels = (?));", match_colors).fetchall()
+match_images = db.execute("with a as (select image from AgLibraryCollectionImage where collection = (?)), b as (select rootFile from Adobe_images inner join a on Adobe_images.id_local = a.image)    select folder, baseName || '.' || extension from AgLibraryFile inner join b on AgLibraryFile.id_local = b.rootFile", coll_id).fetchall()
+print("Image count: {}".format(len(match_images)))
 folder_map = db.execute("select f.id_local, r.absolutePath, f.pathFromRoot from AgLibraryRootFolder r, AgLibraryFolder f where f.rootFolder = r.id_local and f.id_local in (select distinct folder from AgLibraryFile)").fetchall()
 folder_map = dict((f[0], f[1] + f[2] ) for f in folder_map)
 
